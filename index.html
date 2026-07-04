@@ -906,6 +906,22 @@
         height: auto;
         aspect-ratio: 9 / 16;
       }
+      .ad::after { display: none; }
+      .search-bar,
+      .phone-copy span,
+      .product-card,
+      .opening-line {
+        backdrop-filter: none;
+      }
+      .iphone-screen video,
+      .home-card img,
+      .outro-video {
+        filter: none;
+      }
+      .iphone-screen::after {
+        mix-blend-mode: normal;
+        opacity: .42;
+      }
       .replay { position: absolute; }
     }
   </style>
@@ -989,13 +1005,13 @@
       </div>
       <div class="iphone">
         <div class="iphone-screen">
-          <video id="siteVideo" src="Recording 2026-07-03 224915.mp4" autoplay muted loop playsinline></video>
+          <video id="siteVideo" src="Recording 2026-07-03 224915.mp4" muted loop playsinline></video>
         </div>
       </div>
     </section>
 
     <section class="scene scene-outro" id="sceneOutro">
-      <video class="outro-video" id="logoVideo" src="Video Project 2 1 1.mp4" muted loop playsinline></video>
+      <video class="outro-video" id="logoVideo" src="Video Project 2 1 1.mp4" muted playsinline></video>
       <div class="outro-copy">
         <div class="opening-line">قريبًا الافتتاح</div>
       </div>
@@ -1162,9 +1178,10 @@
       activate("search");
       typeQuery();
       playAudioFromStart();
+      siteVideo.pause();
       siteVideo.currentTime = 0;
-      siteVideo.play().catch(() => {});
       logoVideo.pause();
+      logoVideo.loop = false;
       logoVideo.currentTime = 0;
 
       at(3060, () => {
@@ -1192,8 +1209,9 @@
         pulseFlash("55%", "46%");
       });
 
-      at(11700, () => {
+      at(13500, () => {
         productCards.forEach((card) => card.classList.remove("live", "exit-left"));
+        siteVideo.pause();
         activate("outro");
         logoVideo.currentTime = 0;
         logoVideo.play().catch(() => {});
