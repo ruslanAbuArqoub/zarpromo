@@ -372,7 +372,7 @@
     }
 
     .scene-phone.active .iphone {
-      animation: phoneFloat 3.35s var(--ease-out) forwards;
+      animation: phoneFloat 5.8s var(--ease-out) forwards;
     }
 
     .iphone::before {
@@ -778,7 +778,7 @@
       height: 100%;
       transform-origin: left;
       background: linear-gradient(90deg, var(--gold), var(--emerald));
-      animation: progress 10s linear infinite;
+      animation: progress 16s linear infinite;
     }
 
     .replay {
@@ -1167,7 +1167,7 @@
       logoVideo.pause();
       logoVideo.currentTime = 0;
 
-      at(2660, () => {
+      at(3060, () => {
         playClickPop();
         ripple.classList.remove("fire");
         void ripple.offsetWidth;
@@ -1175,7 +1175,7 @@
         pulseFlash("16%", "57%");
       });
 
-      at(3000, () => {
+      at(3400, () => {
         ad.classList.remove("warp");
         void ad.offsetWidth;
         ad.classList.add("warp");
@@ -1184,7 +1184,7 @@
         runScanline();
       });
 
-      at(4550, () => {
+      at(5400, () => {
         productCards.forEach((card) => card.classList.remove("live", "exit-left"));
         activate("phone");
         siteVideo.currentTime = 0;
@@ -1192,7 +1192,7 @@
         pulseFlash("55%", "46%");
       });
 
-      at(7650, () => {
+      at(11700, () => {
         productCards.forEach((card) => card.classList.remove("live", "exit-left"));
         activate("outro");
         logoVideo.currentTime = 0;
@@ -1200,7 +1200,7 @@
         pulseFlash("50%", "50%");
       });
 
-      at(10000, startTimeline);
+      at(16000, startTimeline);
     }
 
     replayBtn.addEventListener("click", startTimeline);
