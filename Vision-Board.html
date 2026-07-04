@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruslan-Matrix | Vision Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { poppins: ["Poppins", "sans-serif"] },
+          colors: {
+            matrix: "#0f3d2e",
+            gold: "#d8b35f",
+            emerald: "#34d399",
+          },
+          boxShadow: {
+            glow: "0 0 40px rgba(216, 179, 95, .16), 0 0 70px rgba(52, 211, 153, .10)",
+            emerald: "0 0 34px rgba(52, 211, 153, .22)",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: "Poppins", sans-serif;
+      color: #f8fafc;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(216, 179, 95, .18), transparent 26%),
+        radial-gradient(circle at 82% 12%, rgba(52, 211, 153, .16), transparent 28%),
+        radial-gradient(circle at 70% 86%, rgba(20, 83, 45, .28), transparent 31%),
+        linear-gradient(135deg, #05060a 0%, #0b1014 38%, #111513 68%, #050608 100%);
+      background-size: 150% 150%;
+      animation: aurora 18s ease-in-out infinite alternate;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      z-index: -1;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.035) 48%, transparent 56%);
+      transform: translateX(-120%);
+      animation: sheen 10s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes aurora {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    @keyframes sheen {
+      0%, 65% { transform: translateX(-130%); }
+      100% { transform: translateX(130%); }
+    }
+
+    .glass {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.045));
+      box-shadow: 0 20px 70px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(216,179,95,.12), transparent 35%, rgba(52,211,153,.09));
+      opacity: .75;
+    }
+
+    .glass > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lift {
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+    }
+
+    .lift:hover {
+      transform: translateY(-5px);
+      border-color: rgba(216,179,95,.36);
+      box-shadow: 0 24px 80px rgba(0,0,0,.38), 0 0 42px rgba(216,179,95,.13);
+    }
+
+    .interactive {
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .interactive:hover {
+      transform: translateY(-2px);
+    }
+
+    .interactive:active {
+      transform: translateY(0) scale(.985);
+    }
+
+    .field {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: .75rem;
+      background: rgba(0,0,0,.24);
+      padding: .75rem .85rem;
+      color: #f8fafc;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .field:focus {
+      border-color: rgba(52,211,153,.55);
+      box-shadow: 0 0 0 4px rgba(52,211,153,.08);
+      background: rgba(0,0,0,.34);
+    }
+
+    .field::placeholder { color: rgba(203,213,225,.55); }
+
+    .task {
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, opacity .22s ease;
+    }
+
+    .kanban-column,
+    .task-list {
+      min-width: 0;
+    }
+
+    .task-action {
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    .task-select {
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(248,250,252,.75) 50%),
+        linear-gradient(135deg, rgba(248,250,252,.75) 50%, transparent 50%);
+      background-position:
+        calc(100% - 16px) 50%,
+        calc(100% - 11px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    .task:active {
+      cursor: grabbing;
+      transform: scale(.985);
+    }
+
+    .task.dragging {
+      opacity: .48;
+      box-shadow: 0 18px 55px rgba(52,211,153,.14);
+    }
+
+    .drop-active {
+      border-color: rgba(52,211,153,.42);
+      background: rgba(52,211,153,.075);
+    }
+
+    .habit input:checked + span {
+      color: #022c22;
+      background: linear-gradient(135deg, #d8b35f, #34d399);
+      border-color: transparent;
+      box-shadow: 0 0 30px rgba(52,211,153,.24);
+    }
+
+    .focus-rings { display: none; }
+    .focus-on .focus-rings { display: grid; }
+
+    .ring {
+      grid-area: 1 / 1;
+      width: 170px;
+      height: 170px;
+      border-radius: 999px;
+      border: 1px solid rgba(52,211,153,.34);
+      animation: breathe 4.6s ease-in-out infinite;
+    }
+
+    .ring:nth-child(2) {
+      width: 122px;
+      height: 122px;
+      border-color: rgba(216,179,95,.36);
+      animation-delay: .55s;
+    }
+
+    .ring:nth-child(3) {
+      width: 76px;
+      height: 76px;
+      border-color: rgba(255,255,255,.25);
+      animation-delay: 1s;
+    }
+
+    @keyframes breathe {
+      0%, 100% {
+        transform: scale(.72);
+        opacity: .35;
+        box-shadow: 0 0 0 rgba(52,211,153,0);
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 1;
+        box-shadow: 0 0 42px rgba(52,211,153,.18);
+      }
+    }
+
+    .progress-ring {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#34d399 var(--progress), rgba(255,255,255,.09) 0);
+      box-shadow: 0 0 38px rgba(52,211,153,.16);
+    }
+
+    .progress-ring::before {
+      content: "";
+      position: absolute;
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      background: rgba(3,7,18,.92);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .digital {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .02em;
+    }
+
+    #toast {
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .24s ease, transform .24s ease;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8">
+    <header class="glass lift rounded-2xl px-5 py-5 sm:px-7" data-aos="fade-down" data-aos-duration="850">
+      <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <span class="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[.2em] text-emerald-200">Ruslan-Matrix</span>
+            <span class="rounded-full border border-gold/25 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-[.2em] text-gold">The Nexus</span>
+          </div>
+          <h1 class="text-3xl font-extrabold leading-tight text-white sm:text-5xl">Welcome to the Nexus</h1>
+          <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">A command center for goals, discipline, coding momentum, and the next version of life.</p>
+        </div>
+
+        <div class="grid min-w-full gap-3 rounded-xl border border-white/10 bg-black/20 p-4 sm:min-w-[310px]">
+          <div id="clock" class="digital text-4xl font-bold text-white sm:text-5xl">00:00:00</div>
+          <div id="date" class="text-sm font-medium text-slate-300">Loading date...</div>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="boostBtn" class="interactive rounded-xl border border-gold/25 bg-gold/10 px-3 py-2 text-xs font-semibold text-gold hover:bg-gold/15">Boost</button>
+            <button id="themePulseBtn" class="interactive rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-emerald-300/15">Pulse</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid gap-6 xl:grid-cols-[1fr_380px]" data-aos="fade-up" data-aos-duration="850">
+      <div class="glass lift rounded-2xl p-5 sm:p-6" data-aos="fade-right" data-aos-delay="80">
+        <div class="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[.18em] text-gold">The Vault</p>
+            <h2 class="mt-1 text-2xl font-bold text-white">Major Goals</h2>
+          </div>
+          <span class="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300 sm:inline-flex">2026-2027 map</span>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <article class="lift rounded-xl border border-white/10 bg-white/[.055] p-4" data-aos="fade-up" data-aos-delay="120">
+            <div class="mb-4 h-1.5 rounded-full bg-gradient-to-r from-gold to-emerald"></div>
+            <h3 class="text-lg font-semibold text-white">Zarina E-commerce Expansion</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-300">Scale product pages, SEO systems, analytics, and conversion flow.</p>
+          </article>
+          <article class="lift rounded-xl border border-white/10 bg-white/[.055] p-4" data-aos="fade-up" data-aos-delay="180">
+            <div class="mb-4 h-1.5 rounded-full bg-gradient-to-r from-emerald to-cyan-300"></div>
+            <h3 class="text-lg font-semibold text-white">Mastering Low-Level C & Java for 42</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-300">Build deeper control of memory, algorithms, OOP, and systems thinking.</p>
+          </article>
+          <article class="lift rounded-xl border border-white/10 bg-white/[.055] p-4" data-aos="fade-up" data-aos-delay="240">
+            <div class="mb-4 h-1.5 rounded-full bg-gradient-to-r from-sky-300 to-gold"></div>
+            <h3 class="text-lg font-semibold text-white">University Studies</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-300">Keep grades strong while turning coursework into real projects.</p>
+          </article>
+          <article class="lift rounded-xl border border-white/10 bg-white/[.055] p-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="mb-4 h-1.5 rounded-full bg-gradient-to-r from-gold to-lime-300"></div>
+            <h3 class="text-lg font-semibold text-white">US Work & Travel 2027</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-300">Prepare documents, budget, English confidence, and summer strategy.</p>
+          </article>
+        </div>
+      </div>
+
+      <aside class="glass lift rounded-2xl p-5 sm:p-6" data-aos="fade-left" data-aos-delay="140">
+        <p class="text-xs font-semibold uppercase tracking-[.18em] text-emerald-200">Countdown Timers</p>
+        <h2 class="mt-1 text-2xl font-bold text-white">Milestones</h2>
+        <div class="mt-5 grid gap-4" id="countdowns"></div>
+      </aside>
+    </section>
+
+    <section class="grid gap-6 xl:grid-cols-[1fr_380px]" data-aos="fade-up" data-aos-duration="850">
+      <div class="glass rounded-2xl p-5 sm:p-6" data-aos="fade-right" data-aos-delay="80">
+        <div class="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[.18em] text-gold">Flexible Kanban</p>
+            <h2 class="mt-1 text-2xl font-bold text-white">Execution Board</h2>
+            <p class="mt-2 text-sm text-slate-300">Add, edit, delete, prioritize, and drag tasks between columns.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button id="clearDoneBtn" class="interactive rounded-xl border border-white/10 bg-white/[.06] px-3 py-2 text-xs font-semibold text-slate-200 hover:border-gold/30">Clear Done</button>
+            <button id="exportBtn" class="interactive rounded-xl border border-white/10 bg-white/[.06] px-3 py-2 text-xs font-semibold text-slate-200 hover:border-emerald-300/30">Export</button>
+            <button id="resetBtn" class="interactive rounded-xl border border-red-300/20 bg-red-400/10 px-3 py-2 text-xs font-semibold text-red-100 hover:bg-red-400/15">Reset</button>
+          </div>
+        </div>
+
+        <form id="taskForm" class="mb-5 grid gap-3 rounded-xl border border-white/10 bg-black/20 p-4 md:grid-cols-[1.2fr_1fr_145px_130px]">
+          <input id="taskTitle" class="field" type="text" placeholder="Task title" maxlength="70" required />
+          <input id="taskDetail" class="field" type="text" placeholder="Short description" maxlength="120" />
+          <select id="taskPriority" class="field">
+            <option value="High">High priority</option>
+            <option value="Medium" selected>Medium priority</option>
+            <option value="Low">Low priority</option>
+          </select>
+          <button class="interactive rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-4 py-3 text-sm font-semibold text-emerald-100 shadow-emerald hover:bg-emerald-300/15" type="submit">Add Task</button>
+        </form>
+
+        <div class="grid gap-4 lg:grid-cols-3">
+          <div class="kanban-column min-h-[380px] rounded-xl border border-white/10 bg-black/20 p-4" data-column="todo">
+            <div class="mb-4 flex items-center justify-between">
+              <h3 class="font-semibold text-white">To Do</h3>
+              <span class="task-count rounded-full bg-white/10 px-2 py-1 text-xs text-slate-300">0</span>
+            </div>
+            <div class="task-list grid gap-3" data-list="todo"></div>
+          </div>
+
+          <div class="kanban-column min-h-[380px] rounded-xl border border-white/10 bg-black/20 p-4" data-column="progress">
+            <div class="mb-4 flex items-center justify-between">
+              <h3 class="font-semibold text-white">In Progress</h3>
+              <span class="task-count rounded-full bg-white/10 px-2 py-1 text-xs text-slate-300">0</span>
+            </div>
+            <div class="task-list grid gap-3" data-list="progress"></div>
+          </div>
+
+          <div class="kanban-column min-h-[380px] rounded-xl border border-white/10 bg-black/20 p-4" data-column="done">
+            <div class="mb-4 flex items-center justify-between">
+              <h3 class="font-semibold text-white">Done</h3>
+              <span class="task-count rounded-full bg-white/10 px-2 py-1 text-xs text-slate-300">0</span>
+            </div>
+            <div class="task-list grid gap-3" data-list="done"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="grid gap-6" data-aos="fade-left" data-aos-delay="140">
+        <section class="glass lift rounded-2xl p-5 sm:p-6" data-aos="fade-up" data-aos-delay="160">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-emerald-200">Command Insights</p>
+          <h2 class="mt-1 text-2xl font-bold text-white">Momentum</h2>
+          <div class="mt-5 flex items-center gap-5">
+            <div class="progress-ring relative shrink-0" id="progressRing" style="--progress: 0%">
+              <span id="progressValue" class="relative z-10 text-2xl font-extrabold text-white">0%</span>
+            </div>
+            <div class="grid flex-1 gap-3">
+              <div class="rounded-xl border border-white/10 bg-white/[.055] p-3">
+                <p class="text-xs text-slate-400">Open Tasks</p>
+                <p id="openTasks" class="digital text-2xl font-bold text-white">0</p>
+              </div>
+              <div class="rounded-xl border border-white/10 bg-white/[.055] p-3">
+                <p class="text-xs text-slate-400">Completed</p>
+                <p id="doneTasks" class="digital text-2xl font-bold text-emerald-200">0</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass lift rounded-2xl p-5 sm:p-6" data-aos="fade-up" data-aos-delay="220">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-gold">Quick Actions</p>
+          <h2 class="mt-1 text-2xl font-bold text-white">Operator Panel</h2>
+          <div class="mt-5 grid gap-3">
+            <button data-quick="coding" class="quick-action interactive rounded-xl border border-white/10 bg-white/[.06] px-4 py-3 text-left text-sm font-semibold text-slate-100 hover:border-emerald-300/30">Generate coding sprint</button>
+            <button data-quick="seo" class="quick-action interactive rounded-xl border border-white/10 bg-white/[.06] px-4 py-3 text-left text-sm font-semibold text-slate-100 hover:border-gold/30">Generate SEO sprint</button>
+            <button data-quick="life" class="quick-action interactive rounded-xl border border-white/10 bg-white/[.06] px-4 py-3 text-left text-sm font-semibold text-slate-100 hover:border-sky-300/30">Generate life planning sprint</button>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="grid gap-6 lg:grid-cols-[1fr_420px]" data-aos="fade-up" data-aos-duration="850">
+      <div class="glass lift rounded-2xl p-5 sm:p-6" data-aos="fade-right" data-aos-delay="80">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[.18em] text-emerald-200">Habit Tracker</p>
+            <h2 class="mt-1 text-2xl font-bold text-white">Daily Protocol</h2>
+          </div>
+          <button id="resetHabitsBtn" class="interactive rounded-xl border border-white/10 bg-white/[.06] px-3 py-2 text-xs font-semibold text-slate-200 hover:border-emerald-300/30">Reset Habits</button>
+        </div>
+        <div id="habits" class="flex flex-wrap gap-3"></div>
+      </div>
+
+      <div id="focusZone" class="glass lift rounded-2xl p-5 sm:p-6" data-aos="fade-left" data-aos-delay="140">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[.18em] text-gold">Focus Zone</p>
+            <h2 class="mt-1 text-2xl font-bold text-white">Deep Work Mode</h2>
+            <p id="quoteText" class="mt-3 text-sm leading-6 text-slate-300">"Discipline turns pressure into architecture."</p>
+          </div>
+          <div class="focus-rings place-items-center">
+            <span class="ring"></span>
+            <span class="ring"></span>
+            <span class="ring"></span>
+          </div>
+        </div>
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          <button id="focusToggle" class="interactive rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-4 py-3 text-sm font-semibold text-emerald-100 shadow-emerald hover:bg-emerald-300/15">Activate Focus</button>
+          <button id="quoteBtn" class="interactive rounded-xl border border-gold/25 bg-gold/10 px-4 py-3 text-sm font-semibold text-gold hover:bg-gold/15">New Quote</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="fixed bottom-5 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-xl border border-emerald-300/20 bg-slate-950/85 px-4 py-3 text-center text-sm font-semibold text-emerald-100 shadow-emerald backdrop-blur-xl"></div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    const STORAGE_KEY = "ruslanMatrixVisionBoard";
+
+    const defaultTasks = [
+      { id: "task-1", title: "Refactor product cards", detail: "Clean up layout, hover states, and responsive spacing.", tag: "Coding", priority: "High", column: "todo" },
+      { id: "task-2", title: "SEO keyword map", detail: "Build titles, meta descriptions, and internal link plan.", tag: "SEO", priority: "Medium", column: "todo" },
+      { id: "task-3", title: "C pointers practice", detail: "Solve 10 memory-focused exercises.", tag: "Study", priority: "High", column: "progress" },
+      { id: "task-4", title: "Work & Travel budget sheet", detail: "Estimate flights, fees, housing, and safety buffer.", tag: "Life", priority: "Medium", column: "progress" },
+      { id: "task-5", title: "Landing page speed audit", detail: "Compress assets and review Lighthouse score.", tag: "Optimization", priority: "Low", column: "done" },
+    ];
+
+    const countdownItems = [
+      { title: "Summer 2027 Prep", date: "2027-06-01T09:00:00" },
+      { title: "Next Coding Project Deadline", date: "2026-08-15T23:59:59" },
+      { title: "University Momentum Check", date: "2026-10-01T08:00:00" },
+    ];
+
+    const habits = ["1 Hour Coding", "Workout", "Read", "SEO Sprint", "English Practice", "Sleep Reset"];
+
+    const quotes = [
+      '"Discipline turns pressure into architecture."',
+      '"Small clean moves, repeated daily, become a system."',
+      '"Build like the future is already watching."',
+      '"Focus is the quiet version of ambition."',
+      '"A sharp plan beats a loud mood."',
+    ];
+
+    const quickTasks = {
+      coding: { title: "90-minute coding sprint", detail: "Pick one bug, one feature, one commit. Ship something visible.", tag: "Coding", priority: "High" },
+      seo: { title: "SEO sprint: 5 product pages", detail: "Rewrite titles, descriptions, headings, and internal links.", tag: "SEO", priority: "Medium" },
+      life: { title: "Life planning review", detail: "Check money, studies, documents, workouts, and weekly priorities.", tag: "Life", priority: "Medium" },
+    };
+
+    let state = loadState();
+    let toastTimer;
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) {
+        return { tasks: [...defaultTasks], habits: {}, quoteIndex: 0 };
+      }
+
+      try {
+        const parsed = JSON.parse(saved);
+        return {
+          tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [...defaultTasks],
+          habits: parsed.habits || {},
+          quoteIndex: Number.isInteger(parsed.quoteIndex) ? parsed.quoteIndex : 0,
+        };
+      } catch {
+        return { tasks: [...defaultTasks], habits: {}, quoteIndex: 0 };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function priorityClass(priority) {
+      if (priority === "High") return "border-red-300/25 bg-red-400/10 text-red-100";
+      if (priority === "Low") return "border-sky-300/25 bg-sky-300/10 text-sky-100";
+      return "border-gold/20 bg-gold/10 text-gold";
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+      document.getElementById("date").textContent = now.toLocaleDateString([], {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+
+    function renderTasks() {
+      document.querySelectorAll(".task-list").forEach((list) => list.innerHTML = "");
+
+      state.tasks.forEach((task) => {
+        const card = document.createElement("article");
+        card.className = "task rounded-xl border border-white/10 bg-white/[.065] p-4 hover:border-gold/35 hover:bg-white/[.09]";
+        card.draggable = true;
+        card.dataset.id = task.id;
+        card.setAttribute("data-aos", "fade-up");
+        card.setAttribute("data-aos-delay", "90");
+        card.innerHTML = `
+          <div class="mb-3 flex items-start justify-between gap-3">
+            <input class="task-title min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-semibold leading-5 text-white outline-none focus:text-emerald-100" value="${escapeHtml(task.title)}" maxlength="70" />
+            <span class="rounded-full border px-2 py-1 text-[10px] font-semibold ${priorityClass(task.priority)}">${escapeHtml(task.priority)}</span>
+          </div>
+          <textarea class="task-detail min-h-14 w-full resize-none border-0 bg-transparent p-0 text-xs leading-5 text-slate-300 outline-none focus:text-slate-100" maxlength="120">${escapeHtml(task.detail || "")}</textarea>
+          <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]">
+            <select class="status-select task-select task-action rounded-lg border border-white/10 bg-black/25 px-3 py-2 pr-8 text-xs font-semibold text-slate-100 outline-none transition hover:border-emerald-300/30 focus:border-emerald-300/50">
+              <option value="todo" ${task.column === "todo" ? "selected" : ""}>To Do</option>
+              <option value="progress" ${task.column === "progress" ? "selected" : ""}>In Progress</option>
+              <option value="done" ${task.column === "done" ? "selected" : ""}>Done</option>
+            </select>
+            <button class="delete-btn task-action interactive rounded-lg border border-red-300/20 bg-red-400/10 px-3 py-2 text-xs font-semibold text-red-100 hover:bg-red-400/15" type="button">Delete</button>
+          </div>
+        `;
+        document.querySelector(`[data-list="${task.column}"]`).appendChild(card);
+      });
+
+      wireTaskEvents();
+      updateTaskCounts();
+      updateInsights();
+      refreshAOS();
+    }
+
+    function wireTaskEvents() {
+      document.querySelectorAll(".task").forEach((card) => {
+        card.addEventListener("dragstart", () => card.classList.add("dragging"));
+        card.addEventListener("dragend", () => card.classList.remove("dragging"));
+
+        card.querySelector(".task-title").addEventListener("input", (event) => {
+          updateTask(card.dataset.id, { title: event.target.value });
+        });
+
+        card.querySelector(".task-detail").addEventListener("input", (event) => {
+          updateTask(card.dataset.id, { detail: event.target.value });
+        });
+
+        card.querySelector(".status-select").addEventListener("change", (event) => {
+          updateTask(card.dataset.id, { column: event.target.value });
+          renderTasks();
+          showToast("Task moved.");
+        });
+
+        card.querySelector(".delete-btn").addEventListener("click", () => {
+          state.tasks = state.tasks.filter((task) => task.id !== card.dataset.id);
+          saveState();
+          renderTasks();
+          showToast("Task deleted.");
+        });
+      });
+
+      document.querySelectorAll(".kanban-column").forEach((column) => {
+        column.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          column.classList.add("drop-active");
+        });
+
+        column.addEventListener("dragleave", () => column.classList.remove("drop-active"));
+
+        column.addEventListener("drop", () => {
+          const dragging = document.querySelector(".dragging");
+          if (!dragging) return;
+
+          updateTask(dragging.dataset.id, { column: column.dataset.column });
+          column.querySelector(".task-list").appendChild(dragging);
+          column.classList.remove("drop-active");
+          updateTaskCounts();
+          updateInsights();
+          showToast("Board updated.");
+        });
+      });
+    }
+
+    function updateTask(id, patch) {
+      const task = state.tasks.find((item) => item.id === id);
+      if (!task) return;
+      Object.assign(task, patch);
+      saveState();
+    }
+
+    function addTask(task) {
+      state.tasks.unshift({
+        id: `task-${Date.now()}`,
+        title: task.title,
+        detail: task.detail,
+        tag: task.tag || "Custom",
+        priority: task.priority || "Medium",
+        column: "todo",
+      });
+      saveState();
+      renderTasks();
+    }
+
+    function updateTaskCounts() {
+      document.querySelectorAll(".kanban-column").forEach((column) => {
+        const count = column.querySelectorAll(".task").length;
+        column.querySelector(".task-count").textContent = count;
+      });
+    }
+
+    function updateInsights() {
+      const total = state.tasks.length || 1;
+      const done = state.tasks.filter((task) => task.column === "done").length;
+      const open = state.tasks.filter((task) => task.column !== "done").length;
+      const percent = Math.round((done / total) * 100);
+
+      document.getElementById("openTasks").textContent = open;
+      document.getElementById("doneTasks").textContent = done;
+      document.getElementById("progressValue").textContent = `${percent}%`;
+      document.getElementById("progressRing").style.setProperty("--progress", `${percent}%`);
+    }
+
+    function renderCountdowns() {
+      const wrap = document.getElementById("countdowns");
+      wrap.innerHTML = countdownItems.map((item, index) => `
+        <article class="rounded-xl border border-white/10 bg-black/20 p-4" data-aos="fade-up" data-aos-delay="${120 + index * 70}">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h3 class="text-sm font-semibold text-white">${item.title}</h3>
+            <span class="h-2.5 w-2.5 rounded-full ${index === 0 ? "bg-gold" : "bg-emerald"} shadow-emerald"></span>
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-center" data-countdown="${item.date}">
+            <div class="rounded-lg bg-white/[.06] p-2"><strong class="days digital block text-lg text-white">0</strong><span class="text-[10px] text-slate-400">Days</span></div>
+            <div class="rounded-lg bg-white/[.06] p-2"><strong class="hours digital block text-lg text-white">0</strong><span class="text-[10px] text-slate-400">Hours</span></div>
+            <div class="rounded-lg bg-white/[.06] p-2"><strong class="minutes digital block text-lg text-white">0</strong><span class="text-[10px] text-slate-400">Min</span></div>
+            <div class="rounded-lg bg-white/[.06] p-2"><strong class="seconds digital block text-lg text-white">0</strong><span class="text-[10px] text-slate-400">Sec</span></div>
+          </div>
+        </article>
+      `).join("");
+      refreshAOS();
+    }
+
+    function updateCountdowns() {
+      document.querySelectorAll("[data-countdown]").forEach((timer) => {
+        const target = new Date(timer.dataset.countdown).getTime();
+        const distance = Math.max(0, target - Date.now());
+
+        timer.querySelector(".days").textContent = Math.floor(distance / (1000 * 60 * 60 * 24));
+        timer.querySelector(".hours").textContent = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, "0");
+        timer.querySelector(".minutes").textContent = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, "0");
+        timer.querySelector(".seconds").textContent = String(Math.floor((distance / 1000) % 60)).padStart(2, "0");
+      });
+    }
+
+    function renderHabits() {
+      const wrap = document.getElementById("habits");
+      wrap.innerHTML = habits.map((habit) => `
+        <label class="habit">
+          <input class="peer sr-only" type="checkbox" data-habit="${escapeHtml(habit)}" ${state.habits[habit] ? "checked" : ""} />
+          <span class="inline-flex min-h-12 cursor-pointer items-center rounded-xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm font-semibold text-slate-200 transition hover:-translate-y-0.5 hover:border-emerald-300/35 hover:bg-white/[.09] active:translate-y-0">
+            ${escapeHtml(habit)}
+          </span>
+        </label>
+      `).join("");
+
+      wrap.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("change", () => {
+          state.habits[input.dataset.habit] = input.checked;
+          saveState();
+          showToast(input.checked ? "Habit locked in." : "Habit unchecked.");
+        });
+      });
+    }
+
+    function wireControls() {
+      document.getElementById("taskForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const title = document.getElementById("taskTitle").value.trim();
+        const detail = document.getElementById("taskDetail").value.trim();
+        const priority = document.getElementById("taskPriority").value;
+        if (!title) return;
+
+        addTask({ title, detail, priority });
+        event.target.reset();
+        document.getElementById("taskPriority").value = "Medium";
+        showToast("New task added.");
+      });
+
+      document.getElementById("clearDoneBtn").addEventListener("click", () => {
+        const before = state.tasks.length;
+        state.tasks = state.tasks.filter((task) => task.column !== "done");
+        saveState();
+        renderTasks();
+        showToast(before === state.tasks.length ? "No done tasks to clear." : "Done tasks cleared.");
+      });
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        state.tasks = [...defaultTasks];
+        state.habits = {};
+        state.quoteIndex = 0;
+        saveState();
+        renderTasks();
+        renderHabits();
+        renderQuote();
+        showToast("Dashboard reset.");
+      });
+
+      document.getElementById("exportBtn").addEventListener("click", async () => {
+        const output = JSON.stringify(state.tasks, null, 2);
+        try {
+          await navigator.clipboard.writeText(output);
+          showToast("Tasks copied as JSON.");
+        } catch {
+          showToast("Export ready in console.");
+          console.log(output);
+        }
+      });
+
+      document.getElementById("boostBtn").addEventListener("click", () => {
+        const unfinished = state.tasks.find((task) => task.column !== "done");
+        if (unfinished) {
+          unfinished.priority = "High";
+          unfinished.column = "progress";
+          saveState();
+          renderTasks();
+          showToast(`Boosted: ${unfinished.title}`);
+        } else {
+          showToast("Everything is already done.");
+        }
+      });
+
+      document.getElementById("themePulseBtn").addEventListener("click", () => {
+        document.body.style.animationDuration = "5s";
+        showToast("Background pulse activated.");
+        setTimeout(() => document.body.style.animationDuration = "", 5000);
+      });
+
+      document.querySelectorAll(".quick-action").forEach((button) => {
+        button.addEventListener("click", () => {
+          addTask(quickTasks[button.dataset.quick]);
+          showToast("Sprint generated.");
+        });
+      });
+
+      document.getElementById("resetHabitsBtn").addEventListener("click", () => {
+        state.habits = {};
+        saveState();
+        renderHabits();
+        showToast("Habits reset.");
+      });
+
+      document.getElementById("focusToggle").addEventListener("click", () => {
+        const zone = document.getElementById("focusZone");
+        const active = zone.classList.toggle("focus-on");
+        document.getElementById("focusToggle").textContent = active ? "Pause Focus" : "Activate Focus";
+        showToast(active ? "Focus mode active." : "Focus mode paused.");
+      });
+
+      document.getElementById("quoteBtn").addEventListener("click", () => {
+        state.quoteIndex = (state.quoteIndex + 1) % quotes.length;
+        saveState();
+        renderQuote();
+        showToast("Quote changed.");
+      });
+    }
+
+    function renderQuote() {
+      document.getElementById("quoteText").textContent = quotes[state.quoteIndex % quotes.length];
+    }
+
+    function refreshAOS() {
+      if (window.AOS) {
+        window.requestAnimationFrame(() => AOS.refreshHard());
+      }
+    }
+
+    updateClock();
+    renderTasks();
+    renderCountdowns();
+    renderHabits();
+    renderQuote();
+    wireControls();
+    updateCountdowns();
+    AOS.init({
+      duration: 850,
+      easing: "ease-out-cubic",
+      once: true,
+      offset: 70,
+    });
+
+    setInterval(updateClock, 1000);
+    setInterval(updateCountdowns, 1000);
+  </script>
+</body>
+</html>
