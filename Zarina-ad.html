@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zarina Vertical Ad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050505;
+      --emerald: #18c887;
+      --emerald-deep: #062116;
+      --gold: #d9b866;
+      --gold-hot: #fff0b6;
+      --cream: #fff8e4;
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+      --ease-punch: cubic-bezier(.2, .9, .1, 1);
+      --ease-hard: cubic-bezier(.82, 0, .12, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(217,184,102,.18), transparent 26%),
+        radial-gradient(circle at 82% 82%, rgba(24,200,135,.18), transparent 28%),
+        #020202;
+      font-family: "IBM Plex Sans Arabic", system-ui, sans-serif;
+    }
+
+    .ad {
+      position: relative;
+      width: 400px;
+      height: 711px;
+      overflow: hidden;
+      isolation: isolate;
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 36px 100px rgba(0,0,0,.7), 0 0 0 10px rgba(255,255,255,.025);
+    }
+
+    .ad::before,
+    .ad::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .ad::before {
+      background:
+        radial-gradient(circle at 22% 28%, rgba(217,184,102,.2), transparent 24%),
+        radial-gradient(circle at 72% 46%, rgba(24,200,135,.2), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.03), transparent 32%, rgba(0,0,0,.58));
+      animation: ambient 8s var(--ease-out) infinite alternate;
+    }
+
+    .ad::after {
+      opacity: .13;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1);
+      filter: blur(0);
+      transition: opacity .28s var(--ease-out), transform .72s var(--ease-out), filter .72s var(--ease-out);
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .scene-search {
+      display: grid;
+      place-items: center;
+      padding: 34px;
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(5,5,5,.46), rgba(5,5,5,.94)),
+        radial-gradient(circle at 50% 42%, rgba(217,184,102,.13), transparent 36%);
+    }
+
+    .scene-search::before {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      pointer-events: none;
+      opacity: .9;
+      background:
+        radial-gradient(circle at 38% 38%, rgba(217,184,102,.24), transparent 22%),
+        radial-gradient(circle at 68% 50%, rgba(24,200,135,.22), transparent 26%),
+        radial-gradient(circle at 50% 70%, rgba(255,240,182,.08), transparent 30%);
+      filter: blur(28px);
+      transform: scale(1.14);
+    }
+
+    .scene-search.active::before {
+      animation: focusPull 1.18s var(--ease-out) forwards;
+    }
+
+    .search-wrap {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      transform: translateY(-18px);
+      filter: blur(9px);
+      opacity: .68;
+    }
+
+    .scene-search.active .search-wrap {
+      animation: contentFocus 1.14s var(--ease-out) .18s forwards;
+    }
+
+    .search-mark {
+      width: 74px;
+      height: 74px;
+      display: block;
+      margin: 0 auto 18px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 26px rgba(217,184,102,.28));
+      opacity: 0;
+      transform: translateY(12px) scale(.9);
+    }
+
+    .scene-search.active .search-mark {
+      animation: markIn .7s var(--ease-out) .08s forwards;
+    }
+
+    .kicker {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding: 0 15px;
+      border: 1px solid rgba(217,184,102,.42);
+      border-radius: 999px;
+      color: var(--gold-hot);
+      background: rgba(0,0,0,.34);
+      box-shadow: 0 0 30px rgba(217,184,102,.12);
+      font-size: 12px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(14px);
+    }
+
+    .scene-search.active .kicker {
+      animation: enterSoft .58s var(--ease-out) forwards;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 100%;
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr 54px;
+      align-items: center;
+      direction: rtl;
+      overflow: hidden;
+      border: 1px solid rgba(255,240,182,.46);
+      border-radius: 21px;
+      background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.045));
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 70px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.16);
+      opacity: 0;
+      transform: translateY(22px) scale(.92);
+    }
+
+    .scene-search.active .search-bar {
+      animation: searchIn .68s var(--ease-out) .16s forwards;
+    }
+
+    .typed {
+      min-width: 0;
+      padding: 0 20px;
+      color: var(--cream);
+      font-size: 19px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-align: right;
+      text-shadow: 0 0 18px rgba(217,184,102,.2);
+    }
+
+    .typed.corrected {
+      color: var(--gold-hot);
+      font-size: 20px;
+      font-weight: 800;
+      text-shadow: 0 0 18px rgba(217,184,102,.42), 0 0 34px rgba(24,200,135,.14);
+      animation: correctedPop .32s var(--ease-punch);
+    }
+
+    .typed::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 23px;
+      margin-right: 6px;
+      vertical-align: middle;
+      background: var(--emerald);
+      animation: caret .52s steps(1) infinite;
+    }
+
+    .search-btn {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      justify-self: center;
+      border-radius: 15px;
+      color: #06110d;
+      background: linear-gradient(135deg, var(--gold-hot), var(--emerald));
+      box-shadow: 0 0 26px rgba(24,200,135,.25);
+    }
+
+    .cursor {
+      position: absolute;
+      left: 61px;
+      top: 402px;
+      z-index: 18;
+      width: 23px;
+      height: 23px;
+      opacity: 0;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.52));
+    }
+
+    .cursor::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(0 0, 0 100%, 35% 75%, 57% 100%, 77% 87%, 55% 62%, 100% 62%);
+      background: #fff;
+    }
+
+    .scene-search.active .cursor {
+      animation: cursorClick 1.85s var(--ease-punch) .32s forwards;
+    }
+
+    .ripple {
+      position: absolute;
+      left: 42px;
+      top: 391px;
+      z-index: 17;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,240,182,.9);
+      opacity: 0;
+      transform: scale(.15);
+    }
+
+    .ripple.fire {
+      animation: ripple .54s var(--ease-out);
+    }
+
+    .scene-home {
+      padding: 18px;
+      transform: scale(1.2);
+      filter: blur(9px);
+      background: linear-gradient(180deg, #050505, #07120e 58%, #040404);
+    }
+
+    .scene-home.active {
+      transform: scale(1);
+      filter: blur(0);
+    }
+
+    .home-shell {
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 29px;
+      background: rgba(255,255,255,.045);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 26px 72px rgba(0,0,0,.36);
+    }
+
+    .home-page {
+      min-height: 1320px;
+      padding: 18px;
+      transform: translateY(0);
+    }
+
+    .scene-home.active .home-page {
+      animation: slowScroll 3.24s var(--ease-out) .16s forwards;
+    }
+
+    .scene-phone {
+      display: grid;
+      place-items: center;
+      perspective: 1200px;
+      background:
+        radial-gradient(circle at 50% 36%, rgba(217,184,102,.13), transparent 35%),
+        radial-gradient(circle at 50% 70%, rgba(24,200,135,.13), transparent 32%),
+        #050505;
+    }
+
+    .phone-copy {
+      position: absolute;
+      top: 28px;
+      left: 24px;
+      right: 24px;
+      z-index: 5;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .scene-phone.active .phone-copy {
+      animation: enterSoft .72s var(--ease-out) .22s forwards;
+    }
+
+    .phone-logo {
+      width: 134px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 24px rgba(217,184,102,.28));
+    }
+
+    .phone-copy span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      margin-top: 8px;
+      padding: 0 13px;
+      border: 1px solid rgba(217,184,102,.28);
+      border-radius: 999px;
+      color: rgba(255,248,228,.92);
+      background: rgba(0,0,0,.56);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 34px rgba(0,0,0,.28);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .iphone {
+      position: relative;
+      z-index: 2;
+      width: 202px;
+      height: 414px;
+      padding: 12px;
+      border-radius: 42px;
+      transform-style: preserve-3d;
+      border: 1px solid rgba(255,255,255,.22);
+      background: linear-gradient(145deg, #222, #050505 48%, #3a3a3a);
+      box-shadow:
+        0 44px 92px rgba(0,0,0,.62),
+        0 0 58px rgba(217,184,102,.18),
+        inset 0 0 0 2px rgba(255,255,255,.08);
+      opacity: 0;
+      transform: translate3d(-24px, 44px, -120px) rotateX(16deg) rotateY(-26deg) rotateZ(5deg) scale(.72);
+    }
+
+    .scene-phone.active .iphone {
+      animation: phoneFloat 3.35s var(--ease-out) forwards;
+    }
+
+    .iphone::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      z-index: 4;
+      width: 72px;
+      height: 20px;
+      border-radius: 999px;
+      background: #050505;
+      transform: translateX(-50%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .iphone-screen {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 32px;
+      background: #020302;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
+    }
+
+    .iphone-screen video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: saturate(1.08) contrast(1.05) brightness(.88);
+    }
+
+    .iphone-screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.16), transparent 18%, transparent 74%, rgba(255,255,255,.08)),
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 20%, rgba(0,0,0,.2));
+      mix-blend-mode: screen;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      direction: ltr;
+    }
+
+    .nav-logo {
+      width: 112px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 0 16px rgba(217,184,102,.24));
+    }
+
+    .nav span {
+      width: 72px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      box-shadow: 0 16px 0 rgba(255,255,255,.08), 0 32px 0 rgba(255,255,255,.1);
+    }
+
+    .hero {
+      min-height: 224px;
+      display: grid;
+      align-content: end;
+      padding: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(217,184,102,.24);
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,.7)),
+        radial-gradient(circle at 74% 32%, rgba(24,200,135,.38), transparent 28%),
+        url("Screenshot 2026-07-04 104832.png") center / cover;
+      box-shadow: 0 26px 64px rgba(0,0,0,.28);
+    }
+
+    .hero h1 {
+      max-width: 270px;
+      color: var(--cream);
+      font-size: 31px;
+      line-height: 1.16;
+      text-align: right;
+    }
+
+    .hero p {
+      margin-top: 8px;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .category-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .category {
+      height: 82px;
+      display: grid;
+      place-items: end start;
+      padding: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 17px;
+      color: rgba(255,248,228,.88);
+      background: linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 10px;
+      direction: ltr;
+    }
+
+    .section-title b {
+      color: var(--gold-hot);
+      font-size: 13px;
+      letter-spacing: .04em;
+    }
+
+    .section-title span {
+      width: 82px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--gold), var(--emerald));
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .home-card {
+      min-height: 168px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .home-card img {
+      width: 100%;
+      height: 118px;
+      display: block;
+      object-fit: cover;
+      filter: saturate(1.08) contrast(1.05);
+    }
+
+    .home-card b {
+      display: block;
+      padding: 9px 10px 0;
+      color: var(--cream);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .home-card span {
+      display: block;
+      padding: 3px 10px 10px;
+      color: rgba(255,255,255,.58);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .wide-banner {
+      min-height: 106px;
+      margin-top: 14px;
+      padding: 16px;
+      display: grid;
+      align-content: center;
+      border: 1px solid rgba(217,184,102,.18);
+      border-radius: 21px;
+      background: linear-gradient(90deg, rgba(217,184,102,.22), rgba(255,255,255,.045), rgba(24,200,135,.16));
+    }
+
+    .wide-banner b {
+      color: var(--gold-hot);
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .wide-banner span {
+      margin-top: 6px;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .scene-products {
+      display: grid;
+      place-items: center;
+      padding: 26px;
+      background:
+        radial-gradient(circle at 50% 36%, rgba(217,184,102,.14), transparent 35%),
+        #050505;
+    }
+
+    .product-card {
+      position: absolute;
+      width: 296px;
+      min-height: 548px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.045));
+      backdrop-filter: blur(22px);
+      box-shadow: 0 34px 90px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.16);
+      opacity: 0;
+      transform: translate3d(110%, 0, 0) rotate(4deg) scale(.78);
+      filter: blur(5px);
+    }
+
+    .product-card.live {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) rotate(0) scale(1.06);
+      filter: blur(0);
+      transition: opacity .08s var(--ease-hard), transform .18s var(--ease-hard), filter .18s var(--ease-hard);
+    }
+
+    .product-card.exit-left {
+      opacity: 0;
+      transform: translate3d(-118%, 0, 0) rotate(-6deg) scale(1.22);
+      filter: blur(8px);
+      transition: opacity .1s var(--ease-hard), transform .16s var(--ease-hard), filter .16s var(--ease-hard);
+    }
+
+    .product-media {
+      position: relative;
+      height: 424px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,240,182,.2), transparent 34%),
+        radial-gradient(circle at 64% 54%, rgba(24,200,135,.18), transparent 36%);
+    }
+
+    .product-media img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      transform: scale(1);
+    }
+
+    .product-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 42%, rgba(0,0,0,.62));
+      pointer-events: none;
+    }
+
+    .product-info {
+      padding: 21px 20px 23px;
+      text-align: center;
+    }
+
+    .product-info b {
+      display: block;
+      color: var(--gold-hot);
+      font-family: "Cinzel", serif;
+      font-size: 23px;
+      line-height: 1.15;
+      letter-spacing: .04em;
+    }
+
+    .product-info span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,.76);
+      font-size: 13px;
+      line-height: 1.75;
+      font-weight: 700;
+    }
+
+    .scene-outro {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: #010101;
+      transform: scale(1.08);
+      filter: blur(10px);
+    }
+
+    .scene-outro.active {
+      transform: scale(1);
+      filter: blur(0);
+    }
+
+    .outro-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 1;
+      background: #010101;
+      filter: saturate(1.06) contrast(1.06) brightness(1);
+      transform: scale(1);
+    }
+
+    .scene-outro.active .outro-video {
+      animation: outroVideoIn 1.4s var(--ease-out) forwards;
+    }
+
+    .scene-outro::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: none;
+    }
+
+    .outro-copy {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 48px;
+      z-index: 2;
+      width: 100%;
+      padding: 0 34px;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .scene-outro.active .outro-copy {
+      animation: outroText .9s var(--ease-out) .38s forwards;
+    }
+
+    .opening-line {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 22px;
+      border: 1px solid rgba(217,184,102,.42);
+      border-radius: 999px;
+      color: var(--gold-hot);
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 28px rgba(217,184,102,.18), 0 18px 44px rgba(0,0,0,.34);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .flash {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,240,182,.95), rgba(24,200,135,.28) 18%, transparent 43%);
+      mix-blend-mode: screen;
+    }
+
+    .flash.burst {
+      animation: flash .34s var(--ease-punch);
+    }
+
+    .scanline {
+      position: absolute;
+      inset: 0;
+      z-index: 19;
+      pointer-events: none;
+      opacity: .34;
+      background: linear-gradient(180deg, transparent, rgba(255,240,182,.2), transparent);
+      transform: translateY(-105%);
+    }
+
+    .scanline.run {
+      animation: scan .42s var(--ease-hard);
+    }
+
+    .progress {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 22;
+      height: 4px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+    }
+
+    .progress span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform-origin: left;
+      background: linear-gradient(90deg, var(--gold), var(--emerald));
+      animation: progress 10s linear infinite;
+    }
+
+    .replay {
+      display: none;
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 40;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgba(217,184,102,.34);
+      border-radius: 999px;
+      color: #06110d;
+      cursor: pointer;
+      font: 700 13px "IBM Plex Sans Arabic", sans-serif;
+      background: linear-gradient(135deg, var(--gold-hot), var(--emerald));
+      box-shadow: 0 18px 42px rgba(0,0,0,.35);
+    }
+
+    .warp {
+      animation: warp .8s var(--ease-punch);
+    }
+
+    @keyframes ambient {
+      from { transform: translate3d(-14px, -12px, 0) scale(1); }
+      to { transform: translate3d(18px, 20px, 0) scale(1.08); }
+    }
+
+    @keyframes enterSoft {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes markIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes searchIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes focusPull {
+      0% { opacity: .95; filter: blur(34px); transform: scale(1.2); }
+      58% { opacity: .7; filter: blur(18px); transform: scale(1.08); }
+      100% { opacity: .28; filter: blur(8px); transform: scale(1); }
+    }
+
+    @keyframes contentFocus {
+      0% { opacity: .58; filter: blur(12px); transform: translateY(-18px) scale(1.02); }
+      58% { opacity: .9; filter: blur(4px); transform: translateY(-18px) scale(1); }
+      100% { opacity: 1; filter: blur(0); transform: translateY(-18px) scale(1); }
+    }
+
+    @keyframes caret {
+      50% { opacity: 0; }
+    }
+
+    @keyframes correctedPop {
+      0% { transform: scale(.96); filter: blur(5px); }
+      100% { transform: scale(1); filter: blur(0); }
+    }
+
+    @keyframes cursorClick {
+      0% { opacity: 0; transform: translate3d(-100px, -54px, 0) scale(.8); filter: blur(5px) drop-shadow(0 10px 18px rgba(0,0,0,.52)); }
+      18% { opacity: 1; }
+      52% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0) drop-shadow(0 10px 18px rgba(0,0,0,.52)); }
+      82% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+      92% { opacity: 1; transform: translate3d(0, 0, 0) scale(.78); }
+      100% { opacity: 0; transform: translate3d(0, 0, 0) scale(.78); }
+    }
+
+    @keyframes ripple {
+      0% { opacity: .95; transform: scale(.15); }
+      100% { opacity: 0; transform: scale(3.25); }
+    }
+
+    @keyframes warp {
+      0% { transform: scale(1); filter: blur(0); }
+      45% { transform: scale(1.34); filter: blur(7px) brightness(1.6); }
+      100% { transform: scale(1); filter: blur(0) brightness(1); }
+    }
+
+    @keyframes slowScroll {
+      0% { transform: translateY(0) scale(1); }
+      34% { transform: translateY(-170px) scale(1.01); }
+      70% { transform: translateY(-390px) scale(1.01); }
+      100% { transform: translateY(-570px) scale(1); }
+    }
+
+    @keyframes phoneFloat {
+      0% { opacity: 0; transform: translate3d(-28px, 82px, -140px) rotateX(16deg) rotateY(-28deg) rotateZ(5deg) scale(.68); }
+      24% { opacity: 1; transform: translate3d(8px, 44px, 20px) rotateX(8deg) rotateY(16deg) rotateZ(-3deg) scale(.92); }
+      58% { opacity: 1; transform: translate3d(-6px, 38px, 56px) rotateX(3deg) rotateY(-10deg) rotateZ(1.5deg) scale(.98); }
+      100% { opacity: 1; transform: translate3d(0, 34px, 72px) rotateX(0deg) rotateY(6deg) rotateZ(0deg) scale(1.02); }
+    }
+
+    @keyframes flash {
+      0% { opacity: 0; transform: scale(.82); }
+      18% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.18); }
+    }
+
+    @keyframes scan {
+      to { transform: translateY(105%); }
+    }
+
+    @keyframes outroVideoIn {
+      0% { opacity: 0; transform: scale(1.04); filter: saturate(1.06) contrast(1.06) brightness(.6) blur(6px); }
+      100% { opacity: 1; transform: scale(1); filter: saturate(1.06) contrast(1.06) brightness(1) blur(0); }
+    }
+
+    @keyframes outroText {
+      from { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    @keyframes progress {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @media (max-width: 430px), (max-height: 760px) {
+      body { overflow: auto; padding: 10px; }
+      .ad {
+        width: min(400px, calc(100vw - 20px));
+        height: auto;
+        aspect-ratio: 9 / 16;
+      }
+      .replay { position: absolute; }
+    }
+  </style>
+</head>
+<body>
+  <button class="replay" id="replayBtn" type="button">إعادة التشغيل</button>
+  <audio id="adAudio" src="ElevenLabs_2026-06-30T13_55_51_Ghawi - Professional and Dynamic_pvc_sp100_s50_sb75_v3.mp3" preload="auto"></audio>
+
+  <main class="ad" id="ad">
+    <section class="scene scene-search active" id="sceneSearch">
+      <div class="search-wrap">
+        <img class="search-mark" src="zarina-logo-mark-small.png" alt="Zarina mark" />
+        <div class="kicker">اكتشف المواد الأولية الطبيعية</div>
+        <div class="search-bar">
+          <div class="typed" id="typed"></div>
+          <div class="search-btn" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M10.8 18.1a7.3 7.3 0 1 1 0-14.6 7.3 7.3 0 0 1 0 14.6Zm5.2-1.2 4.5 4.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="cursor"></div>
+      <div class="ripple" id="ripple"></div>
+    </section>
+
+    <section class="scene scene-home" id="sceneHome">
+      <div class="home-shell">
+        <div class="home-page">
+          <div class="nav"><img class="nav-logo" src="41237238-6bc1-486f-a950-024018229b74-removebg-preview.png" alt="Zarina" /><span></span></div>
+          <div class="hero">
+            <h1>Luxury raw materials for natural beauty</h1>
+            <p>زيوت، زبدات، ومكونات نباتية مختارة بعناية.</p>
+          </div>
+          <div class="category-row">
+            <div class="category">Oils</div>
+            <div class="category">Butters</div>
+            <div class="category">Botanicals</div>
+          </div>
+          <div class="section-title"><b>Featured Essentials</b><span></span></div>
+          <div class="home-grid">
+            <article class="home-card"><img src="Screenshot 2026-07-04 104926.png" alt="Zarina product" /><b>Pure Botanical Oil</b><span>Raw natural material</span></article>
+            <article class="home-card"><img src="Screenshot 2026-07-04 105035.png" alt="Zarina product" /><b>Raw Shea Butter</b><span>Rich daily care</span></article>
+            <article class="home-card"><img src="Screenshot 2026-07-04 105102.png" alt="Zarina product" /><b>Emerald Herbal Blend</b><span>Fresh botanical touch</span></article>
+            <article class="home-card"><img src="Screenshot 2026-07-04 105129.png" alt="Zarina product" /><b>Golden Glow Serum</b><span>Elegant pure glow</span></article>
+          </div>
+          <div class="wide-banner">
+            <b>Natural origin. Premium feel.</b>
+            <span>مصادر مختارة، تفاصيل واضحة، وتجربة شراء أنيقة.</span>
+          </div>
+          <div class="section-title"><b>New Arrivals</b><span></span></div>
+          <div class="home-grid">
+            <article class="home-card"><img src="Screenshot 2026-07-04 105154.png" alt="Zarina product" /><b>Luxury Extract</b><span>Clean formulation base</span></article>
+            <article class="home-card"><img src="Screenshot 2026-07-04 105219.png" alt="Zarina product" /><b>Natural Clay</b><span>Ritual grade material</span></article>
+            <article class="home-card"><img src="Screenshot 2026-07-04 105256.png" alt="Zarina product" /><b>Botanical Powder</b><span>Soft premium texture</span></article>
+            <article class="home-card"><img src="41237238-6bc1-486f-a950-024018229b74-removebg-preview.png" alt="Zarina logo product" /><b>Zarina Selection</b><span>High-end naturals</span></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene scene-products" id="sceneProducts">
+      <article class="product-card">
+        <div class="product-media"><img src="Screenshot 2026-07-04 105035.png" alt="Raw Shea Butter" /></div>
+        <div class="product-info"><b>شمع صويا حبيبات</b><span>مواد أولية نقية لصناعة طبيعية راقية</span></div>
+      </article>
+      <article class="product-card">
+        <div class="product-media"><img src="Screenshot 2026-07-04 105102.png" alt="Emerald Herbal Blend" /></div>
+        <div class="product-info"><b>زبدة الورد</b><span>ملمس فاخر ولمسة عناية ناعمة</span></div>
+      </article>
+      <article class="product-card">
+        <div class="product-media"><img src="Screenshot 2026-07-04 105129.png" alt="Golden Glow Serum" /></div>
+        <div class="product-info"><b>زيت الخروع</b><span>زيت طبيعي أساسي بجودة موثوقة</span></div>
+      </article>
+    </section>
+
+    <section class="scene scene-phone" id="scenePhone">
+      <div class="phone-copy">
+        <img class="phone-logo" src="41237238-6bc1-486f-a950-024018229b74-removebg-preview.png" alt="Zarina" />
+        <span>واجهة المتجر الحقيقية داخل تجربة موبايل فاخرة</span>
+      </div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <video id="siteVideo" src="Recording 2026-07-03 224915.mp4" autoplay muted loop playsinline></video>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene scene-outro" id="sceneOutro">
+      <video class="outro-video" id="logoVideo" src="Video Project 2 1 1.mp4" muted loop playsinline></video>
+      <div class="outro-copy">
+        <div class="opening-line">قريبًا الافتتاح</div>
+      </div>
+    </section>
+
+    <div class="flash" id="flash"></div>
+    <div class="scanline" id="scanline"></div>
+    <div class="progress"><span id="progressBar"></span></div>
+  </main>
+
+  <script>
+    const ad = document.getElementById("ad");
+    const typed = document.getElementById("typed");
+    const ripple = document.getElementById("ripple");
+    const flash = document.getElementById("flash");
+    const scanline = document.getElementById("scanline");
+    const replayBtn = document.getElementById("replayBtn");
+    const progressBar = document.getElementById("progressBar");
+    const siteVideo = document.getElementById("siteVideo");
+    const logoVideo = document.getElementById("logoVideo");
+    const adAudio = document.getElementById("adAudio");
+    const productCards = [...document.querySelectorAll(".product-card")];
+
+    const scenes = {
+      search: document.getElementById("sceneSearch"),
+      home: document.getElementById("sceneHome"),
+      products: document.getElementById("sceneProducts"),
+      phone: document.getElementById("scenePhone"),
+      outro: document.getElementById("sceneOutro"),
+    };
+
+    const firstQuery = "أفضل زيوت طبي...";
+    const correctedQuery = "زارينا للمواد الأولية";
+    let timers = [];
+    let sfxContext;
+
+    function at(ms, fn) {
+      const timer = setTimeout(fn, ms);
+      timers.push(timer);
+    }
+
+    function clearTimeline() {
+      timers.forEach((timer) => clearTimeout(timer));
+      timers = [];
+    }
+
+    function activate(sceneName) {
+      Object.entries(scenes).forEach(([name, scene]) => {
+        scene.classList.toggle("active", name === sceneName);
+      });
+    }
+
+    function restartAnimation(element) {
+      element.style.animation = "none";
+      void element.offsetHeight;
+      element.style.animation = "";
+    }
+
+    function pulseFlash(x = "50%", y = "50%") {
+      flash.style.setProperty("--x", x);
+      flash.style.setProperty("--y", y);
+      flash.classList.remove("burst");
+      void flash.offsetWidth;
+      flash.classList.add("burst");
+    }
+
+    function runScanline() {
+      scanline.classList.remove("run");
+      void scanline.offsetWidth;
+      scanline.classList.add("run");
+    }
+
+    function getSfxContext() {
+      if (!sfxContext) {
+        sfxContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      sfxContext.resume().catch(() => {});
+      return sfxContext;
+    }
+
+    function playClickPop() {
+      const context = getSfxContext();
+      const time = context.currentTime;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(980, time);
+      oscillator.frequency.exponentialRampToValueAtTime(180, time + .16);
+      gain.gain.setValueAtTime(.0001, time);
+      gain.gain.exponentialRampToValueAtTime(.08, time + .012);
+      gain.gain.exponentialRampToValueAtTime(.0001, time + .22);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(time);
+      oscillator.stop(time + .24);
+    }
+
+    function setTypedText(value, corrected = false) {
+      typed.textContent = value;
+      typed.classList.toggle("corrected", corrected);
+    }
+
+    function scheduleTyping(text, startAt, speed, corrected = false) {
+      [...text].forEach((_, index) => {
+        at(startAt + index * speed, () => {
+          setTypedText(text.slice(0, index + 1), corrected);
+        });
+      });
+    }
+
+    function scheduleDeleting(text, startAt, speed) {
+      [...text].forEach((_, index) => {
+        at(startAt + index * speed, () => {
+          setTypedText(text.slice(0, text.length - index - 1), false);
+        });
+      });
+    }
+
+    function typeQuery() {
+      setTypedText("", false);
+      scheduleTyping(firstQuery, 760, 42, false);
+      scheduleDeleting(firstQuery, 1430, 22);
+      at(1690, () => {
+        pulseFlash("54%", "54%");
+        runScanline();
+      });
+      scheduleTyping(correctedQuery, 1710, 36, true);
+    }
+
+    function playAudioFromStart() {
+      adAudio.volume = .95;
+      adAudio.currentTime = 0;
+      adAudio.play().catch(() => {});
+    }
+
+    function flashProducts() {
+      productCards.forEach((card) => {
+        card.classList.remove("live", "exit-left");
+      });
+
+      productCards.forEach((card, index) => {
+        at(index * 260, () => {
+          productCards.forEach((item) => {
+            if (item.classList.contains("live")) {
+              item.classList.remove("live");
+              item.classList.add("exit-left");
+            }
+          });
+          card.classList.remove("exit-left");
+          card.classList.add("live");
+          pulseFlash(index % 2 ? "73%" : "28%", index % 2 ? "44%" : "58%");
+          runScanline();
+        });
+      });
+    }
+
+    function startTimeline() {
+      clearTimeline();
+      Object.values(scenes).forEach((scene) => scene.classList.remove("active"));
+      productCards.forEach((card) => card.classList.remove("live", "exit-left"));
+      setTypedText("", false);
+
+      restartAnimation(progressBar);
+      activate("search");
+      typeQuery();
+      playAudioFromStart();
+      siteVideo.currentTime = 0;
+      siteVideo.play().catch(() => {});
+      logoVideo.pause();
+      logoVideo.currentTime = 0;
+
+      at(2660, () => {
+        playClickPop();
+        ripple.classList.remove("fire");
+        void ripple.offsetWidth;
+        ripple.classList.add("fire");
+        pulseFlash("16%", "57%");
+      });
+
+      at(3000, () => {
+        ad.classList.remove("warp");
+        void ad.offsetWidth;
+        ad.classList.add("warp");
+        activate("products");
+        flashProducts();
+        runScanline();
+      });
+
+      at(4550, () => {
+        productCards.forEach((card) => card.classList.remove("live", "exit-left"));
+        activate("phone");
+        siteVideo.currentTime = 0;
+        siteVideo.play().catch(() => {});
+        pulseFlash("55%", "46%");
+      });
+
+      at(7650, () => {
+        productCards.forEach((card) => card.classList.remove("live", "exit-left"));
+        activate("outro");
+        logoVideo.currentTime = 0;
+        logoVideo.play().catch(() => {});
+        pulseFlash("50%", "50%");
+      });
+
+      at(10000, startTimeline);
+    }
+
+    replayBtn.addEventListener("click", startTimeline);
+    document.addEventListener("pointerdown", () => {
+      if (adAudio.paused) adAudio.play().catch(() => {});
+    }, { once: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        clearTimeline();
+      } else {
+        startTimeline();
+      }
+    });
+
+    startTimeline();
+  </script>
+</body>
+</html>
